@@ -1,5 +1,64 @@
-This project is a high-performance 2D rigid body simulation framework built from the ground up using C++20 and the Simple and Fast Multimedia Library (SFML). At its core, the engine utilizes a custom-built mathematical library centered on a robust Vector2 class, which facilitates all spatial calculations, including vector addition, scalar multiplication, and distance checks. By decoupling the physics state—managed by the RigidBody class—from the graphical representation, the engine maintains a clean "Model-View" architecture that allows for deterministic simulations independent of visual frame rates.
+================================================================================
+                           SOLAR SYSTEM SIMULATOR
+                          Orbital Mechanics Engine
+================================================================================
 
-The simulation logic is driven by Semi-Implicit Euler Integration, a method favored in game development for its stability and energy conservation properties compared to standard Euler methods. Each frame, the engine accumulates gravitational and user-defined forces to determine acceleration, updates velocity, and then integrates that velocity to solve for the object's new position. This sequence ensures that the simulation remains stable even during high-velocity interactions. To prevent objects from escaping the simulation environment, the engine employs a boundary resolution system for all four window walls, utilizing position snapping to eliminate "clipping" and applying coefficients of restitution and friction to simulate realistic energy loss during impacts.
+1. OVERVIEW
+-----------
+This application is a 2D N-body orbital simulation built in C++ using the 
+SFML (Simple and Fast Multimedia Library). It provides a high-fidelity 
+representation of celestial bodies governed by Newtonian gravity, featuring 
+interactive camera controls and time-dilation capabilities.
 
-Interaction is handled through a real-time event polling system, allowing users to apply dynamic impulses to objects via mouse input. By calculating the vector between the cursor and the rigid body, the engine translates user clicks into directional forces, providing an intuitive way to test the system's kinetic responses. The entire environment is highly configurable, with parameters for mass, gravity, and bounciness exposed for easy tuning. Designed with scalability in mind, the architecture is prepared for future implementations of complex collision manifolds, spatial partitioning via Quadtrees, and advanced constraint solvers for joints and springs
+2. SYSTEM FEATURES
+------------------
+* Physics Engine: Implements Newton's Law of Universal Gravitation with 
+  numerical sub-stepping for enhanced stability.
+* Visuals: Dynamic orbital path indicators (static), scaled planetary 
+  representations, and a real-time UI monitor.
+* Interaction: 
+    - Smooth zoom and pan functionality.
+    - Click-to-focus locking on specific celestial bodies.
+    - Variable time-warp levels (0x to 100x).
+
+3. TECHNICAL SPECIFICATIONS
+---------------------------
+* Language: C++17
+* Graphics Library: SFML 2.5+
+* Dependencies: 
+    - RigidBody.h (Physics state container)
+    - Vector2.h (Vector mathematics)
+* Performance: 60 FPS capped with 15 physics sub-steps per frame.
+
+4. USER CONTROLS
+----------------
+[ MOTION ]
+- Pan Camera:      Left-Click + Drag (on empty space)
+- Zoom In/Out:     [ + ] and [ - ] keys
+- Reset View:      [ M ] key (Return to Sun/Home)
+
+[ SIMULATION ]
+- Focus Planet:    Left-Click directly on a planet
+- Increase Warp:   [ . ] (Period)
+- Decrease Warp:   [ , ] (Comma)
+
+5. PHYSICS LOGIC
+----------------
+The simulation initializes planets using the circular orbit velocity formula:
+    v = sqrt(G * M_sun / distance)
+
+To maintain accuracy during high time-warp settings, the engine executes 
+multiple physics iterations per render frame. This prevents the "drift" 
+commonly associated with Euler integration in high-velocity systems.
+
+6. INSTALLATION & COMPILATION
+-----------------------------
+Ensure SFML is installed on your system. 
+
+Compilation example (GCC):
+g++ -c main.cpp -o main.o
+g++ main.o -o SolarSim -lsfml-graphics -lsfml-window -lsfml-system
+
+Ensure that a valid .ttf font file is present in the working directory 
+or specified system path for the UI overlay to render.
+
