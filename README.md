@@ -1,64 +1,76 @@
-================================================================================
-                           SOLAR SYSTEM SIMULATOR
-                          Orbital Mechanics Engine
-================================================================================
+PhysEngine — Solar System Simulator
+A C++ solar system simulation project with two independent implementations: a 2D orbital physics simulator built with SFML, and a 3D first-person explorer built with raylib. Both use real astronomical data and run at a simulation speed of 1 second = 1 Earth day.
 
-1. OVERVIEW
------------
-This application is a 2D N-body orbital simulation built in C++ using the 
-SFML (Simple and Fast Multimedia Library). It provides a high-fidelity 
-representation of celestial bodies governed by Newtonian gravity, featuring 
-interactive camera controls and time-dilation capabilities.
+2D Simulator (2D/)
+A top-down orbital mechanics simulation using real gravitational physics. Planets orbit the Sun using Newtonian gravity computed each frame, with adaptive sub-stepping to keep orbits stable at high warp speeds.
+Features
 
-2. SYSTEM FEATURES
-------------------
-* Physics Engine: Implements Newton's Law of Universal Gravitation with 
-  numerical sub-stepping for enhanced stability.
-* Visuals: Dynamic orbital path indicators (static), scaled planetary 
-  representations, and a real-time UI monitor.
-* Interaction: 
-    - Smooth zoom and pan functionality.
-    - Click-to-focus locking on specific celestial bodies.
-    - Variable time-warp levels (0x to 100x).
+Real gravitational physics — gravitational constant derived from Earth's orbital period and distance
+All 8 planets with true relative distances, colour-coded and labelled
+Dotted orbit path indicators drawn at startup for each planet
+Time warp — 8 warp levels from paused up to 1000× speed
+Adaptive physics stepping — extra sub-steps at high warp to maintain orbit stability
+Click-to-focus — click any planet to lock the camera onto it
+Pan and zoom — drag to pan, keyboard to zoom
+HUD overlay showing current warp, focus target, and controls
 
-3. TECHNICAL SPECIFICATIONS
----------------------------
-* Language: C++17
-* Graphics Library: SFML 2.5+
-* Dependencies: 
-    - RigidBody.h (Physics state container)
-    - Vector2.h (Vector mathematics)
-* Performance: 60 FPS capped with 15 physics sub-steps per frame.
+Controls
+Key / InputActionLeft click planetFocus camera on planetLeft click + dragPan camera+ / -Zoom in / out. / ,Increase / decrease time warpMReset camera to default view
+Requirements
 
-4. USER CONTROLS
-----------------
-[ MOTION ]
-- Pan Camera:      Left-Click + Drag (on empty space)
-- Zoom In/Out:     [ + ] and [ - ] keys
-- Reset View:      [ M ] key (Return to Sun/Home)
+C++20 compiler (e.g. g++)
+SFML (Graphics, Window, System modules)
 
-[ SIMULATION ]
-- Focus Planet:    Left-Click directly on a planet
-- Increase Warp:   [ . ] (Period)
-- Decrease Warp:   [ , ] (Comma)
+bash# macOS
+brew install sfml
 
-5. PHYSICS LOGIC
-----------------
-The simulation initializes planets using the circular orbit velocity formula:
-    v = sqrt(G * M_sun / distance)
+# Ubuntu/Debian
+sudo apt install libsfml-dev
+Building & Running
+bashcd 2D
+make
+./PhysEngine
 
-To maintain accuracy during high time-warp settings, the engine executes 
-multiple physics iterations per render frame. This prevents the "drift" 
-commonly associated with Euler integration in high-velocity systems.
+3D Simulator (3D/)
+A free-roaming first-person explorer of the solar system rendered in 3D. Move through space at any scale and watch the planets orbit in real time.
+Features
 
-6. INSTALLATION & COMPILATION
------------------------------
-Ensure SFML is installed on your system. 
+True-scale distances and sizes — planetary distances in millions of km, radii in 10,000 km units
+Real orbital periods — 1 second = 1 Earth day
+All 8 planets with colour-coded spheres and floating name/distance labels
+Moons — Earth's Moon, Jupiter's Io & Europa, and Saturn's Titan
+Saturn's rings rendered as a scaled disc
+Free-look first-person camera with WASD movement and mouse look
+HUD overlay showing controls and your current distance from the Sun
 
-Compilation example (GCC):
-g++ -c main.cpp -o main.o
-g++ main.o -o SolarSim -lsfml-graphics -lsfml-window -lsfml-system
+Controls
+Key / InputActionW A S DMove cameraMouseLook aroundLeft Shift (held)Move fasterMToggle mouse cursorEscQuit
+Requirements
 
-Ensure that a valid .ttf font file is present in the working directory 
-or specified system path for the UI overlay to render.
+C++20 compiler (e.g. g++)
+raylib — install via Homebrew:
 
+bashbrew install raylib
+Building & Running
+bashcd 3D
+make
+./PhysEngine
+
+Note: The Makefile targets macOS (Apple Silicon) with Homebrew raylib at /opt/homebrew/opt/raylib. On Linux, update the CXXFLAGS include path and remove the -framework flags from LDFLAGS.
+
+
+Project Structure
+PhysEngine/
+├── 2D/
+│   ├── main.cpp          # Simulation logic and SFML rendering
+│   ├── RigidBody.h       # Physics body definition
+│   ├── RidgidBody.cpp    # Physics body implementation
+│   ├── vector2.h         # 2D vector math
+│   └── Makefile
+├── 3D/
+│   ├── main.cpp          # Simulation logic and raylib rendering
+│   └── Makefile
+└── LICENSE
+
+License
+This project is licensed under the terms found in the LICENSE file.
